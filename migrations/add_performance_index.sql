@@ -1,0 +1,1 @@
+CREATE INDEX idx_billing_reports_company_revenue ON billing_reports(company_id, revenue);
