@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { analyzeSlowQuery } from './ai-analyzer.js';
-import { createOptimizationPullRequest } from './github-service.js'; // Import our new GitHub module
+import { createOptimizationPullRequest } from './github-service.js'; // Imports the GitHub module
 
 dotenv.config();
 
@@ -45,13 +45,13 @@ app.post('/v1/telemetry', verifyApiKey, async (req: Request, res: Response) => {
     console.log(`📊 Risk Index: ${aiAnalysis.riskAssessment}`);
     console.log('==================================================');
     
-    // 2. Automatically dispatch the Pull Request to GitHub
+    // 2. Automatically dispatch the Pull Request to GitHub (Added Here!)
     console.log('🐙 Dispatching automated Pull Request loop...');
     
     const prUrl = await createOptimizationPullRequest({
-      repoOwner: 'azi-tyto',                  // Your GitHub username
-      repoName: 'query-optimizer-saas',       // The repository name we are working in
-      baseBranch: 'main',                     // Your target branch
+      repoOwner: 'hardddisk1',                // Your new account name
+      repoName: 'query-optimizer-saas',       // Your repository name
+      baseBranch: 'main',                     // The branch you pushed to
       suggestedSql: aiAnalysis.suggestedIndexSql,
       explanation: aiAnalysis.explanation
     });
