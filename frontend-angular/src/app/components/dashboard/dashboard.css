@@ -1,0 +1,33 @@
+/* Dashboard Component Encapsulated Layout Styles */
+
+.custom-dark-card {
+  background-color: #16171d;
+  border: 1px solid #2f313a;
+  border-radius: 12px;
+}
+
+.custom-card-body {
+  padding: 1.5rem;
+}
+
+/* FIX: Enhancing readability for subheaders against dark canvas */
+.card-metric-title {
+  color: #8b949e !important; /* Premium light grey for crisp readability */
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+.border-dashed {
+  border-style: dashed !important;
+  border-color: #2f313a !important;
+}
+
+.empty-state-text {
+  color: #8b949e;
+}
+
+/* Custom terminal execution view blocks */
+.terminal-block {
+  background-color: #000000;
+  border: 1px solid #21262d;
+}
