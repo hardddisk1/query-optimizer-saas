@@ -61,22 +61,25 @@ Open the client-java suite inside IntelliJ IDEA. Locate: client-java/src/main/ja
 
 Upon clicking play in your Java IDE, the Node service will dump the following live pipeline stream confirming execution status:
 
-==================================================
+-------------------------------------------------
 ⚠️ [SLOW QUERY INGESTED] Execution Time: 745.00ms
 📜 Raw SQL: SELECT company_id, SUM(revenue) FROM billing_reports GROUP BY company_id HAVING SUM(revenue) > 500000;
-==================================================
+-------------------------------------------------
+
 🤖 Contacting Claude Tuning Engine for optimization strategies...
 ✨ [CLAUDE OPTIMIZATION GENERATED]
 🛠️ Proposed Fix: CREATE INDEX idx_billing_reports_company_revenue ON billing_reports(company_id, revenue);
 📊 Risk Index: LOW
-==================================================
+-------------------------------------------------
 🐙 Dispatching automated Pull Request loop...
 --- 🐙 Live PR Dispatch Verification ---
 Token Runtime Status: LOADED ✅
----------------------------------------
+------------------------------------------------
 🌿 Creating new Git branch: optimize/db-index-1779496714218...
 💾 Writing migration file: migrations/add_performance_index.sql...
 🚀 Shipping automated Pull Request to hardddisk1/query-optimizer-saas...
 🎉 SUCCESS: Pull Request deployed live!
 🔗 Link: https://github.com/hardddisk1/query-optimizer-saas/pull/1
-==================================================
+-------------------------------------------------
+
+
