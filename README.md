@@ -7,62 +7,53 @@ An automated, cross-runtime engineering pipeline that captures slow database que
 ## 🏗️ Architecture & Data Flow
 
 [Java Client App] ──(HTTP POST Telemetry)──▶ [Node.js Gateway Server]
-                                                    │
-                                         (Claude Optimization API)
-                                                    ▼
+                                              │
+                                     (Claude Optimization API)
+                                              ▼
 [GitHub Repository] ◀──(Automated Live PR)─── [Claude AI Engine]
 
 1. Telemetry Capture: The Java client intercepts a heavy or un-indexed query payload (e.g., executing > 500ms) and dispatches it over an encrypted stream.
 2. Gateway Ingestion: A Node.js backend cluster ingests the metrics, verifies secure local bearer tokens, and maps out the extraction thread.
 3. AI Logic Processing: The SQL data is analyzed by Claude, which generates raw relational index schemas (CREATE INDEX), risk assessments, and semantic performance rationales.
 4. DevOps Automation: The server leverages the GitHub REST API to isolate a unique feature branch, push the dynamic physical .sql script, and open a live Pull Request.
+5. Real-Time Monitoring: An Angular (v18+) Dashboard utilizes Signals to provide live visualization of all incoming telemetry and automated fix progress.
 
 ---
 
 ## 📁 System Topology
 
 query-optimizer-saas/
-├── backend-node/                 # TypeScript Node.js Service (VS Code Target)
-│   ├── src/
-│   │   ├── index.ts              # Express API Engine & Route Mapping
-│   │   ├── ai-analyzer.ts        # Claude AI Prompt Integration Layer
-│   │   └── github-service.ts     # Octokit REST API Automated PR Logic
-│   └── .env                      # Local Runtime Environment Configuration
-└── client-java/                  # Performance Test Client (IntelliJ Target)
-    └── src/main/java/...         # Interceptor Simulation Wireframes
+├── backend-node/             # TypeScript Node.js Service
+├── client-java/              # Performance Test Client Interceptor
+└── frontend-angular/         # Angular (v18+) Monitoring UI (Standalone/Signals)
 
 ---
 
 ## 🚀 Local Installation & Execution
-
-Follow these precise sequential bounds to establish and verify the pipeline on your machine.
 
 ### 1. Prerequisites
 * Hardware: Apple Silicon (MacBook Pro M4 Architecture verified)
 * Runtimes: Node.js (v18+) & Java Virtual Machine (JDK 11/17+ compliant)
 
 ### 2. Infrastructure Setup & Environment Configuration
-Clone the repository locally, isolate your configuration files, and ensure your credentials are safe from version control.
-
 Inside the backend-node/ directory, populate a .env file with the following operational variables:
 
 OPTIMIZER_API_KEY=dev-secret-key-123
 GITHUB_TOKEN=ghp_yourActualTokenStringHere
 
 ### 3. Launching the Orchestration Engine
-Initialize the Node.js TypeScript interpreter to actively watch for incoming analytical payloads.
-
 cd backend-node
 npm install
 npm run dev
 
-Confirmation Output: 🚀 Telemetry Ingestion Engine online on port 3000
+cd ../frontend-angular
+npm install
+ng serve
+
+*Access the dashboard at http://localhost:4200.*
 
 ### 4. Simulating Slow Telemetry
-Open the client-java suite inside solid IntelliJ IDEA. Locate the primary performance interceptor runner:
-client-java/src/main/java/TestClientApp.java
-
-Execute the runtime thread using the Green Play Button.
+Open the client-java suite inside IntelliJ IDEA. Locate: client-java/src/main/java/TestClientApp.java. Execute the runtime thread using the Green Play Button.
 
 ---
 
