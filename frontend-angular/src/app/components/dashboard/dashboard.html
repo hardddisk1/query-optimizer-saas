@@ -1,24 +1,23 @@
 <div class="container py-5" style="max-width: 1140px;">
-  
-  <header class="mb-5">
+  <header class="mb-5 border-bottom border-secondary pb-3">
     <h1 class="fw-bold text-white mb-2">⚡ AI Query Optimizer Dashboard</h1>
     <p class="text-secondary fs-6">Live cross-runtime diagnostic pipeline monitoring active telemetry integrations.</p>
   </header>
 
   <div class="row g-4 mb-5">
     <div class="col-12 col-md-6">
-      <div class="card custom-dark-card shadow-sm">
-        <div class="custom-card-body">
-          <h6 class="text-uppercase fw-bold card-metric-title mb-2">Captured Bottlenecks</h6>
-          <h2 class="display-6 fw-bold text-info m-0">{{ totalQueriesProcessed }}</h2>
+      <div class="card bg-dark text-white shadow border-secondary">
+        <div class="card-body">
+          <h6 class="text-uppercase text-info fw-bold mb-2">Captured Bottlenecks</h6>
+          <h2 class="display-5 fw-bold m-0">{{ metrics().length }}</h2>
         </div>
       </div>
     </div>
     <div class="col-12 col-md-6">
-      <div class="card custom-dark-card shadow-sm">
-        <div class="custom-card-body">
-          <h6 class="text-uppercase fw-bold card-metric-title mb-2">Automated Migrations</h6>
-          <h2 class="display-5 fw-bold text-success m-0">{{ totalPrsDeployed }}</h2>
+      <div class="card bg-dark text-white shadow border-secondary">
+        <div class="card-body">
+          <h6 class="text-uppercase text-success fw-bold mb-2">Automated Migrations</h6>
+          <h2 class="display-5 fw-bold m-0">{{ totalPrs() }}</h2>
         </div>
       </div>
     </div>
@@ -27,43 +26,18 @@
   <section>
     <h4 class="fw-bold text-white mb-4">Real-Time Activity Stream</h4>
 
-    <div *ngIf="metrics.length === 0" class="card custom-dark-card text-center p-5 border-dashed">
-      <div class="custom-card-body empty-state-text">
-        <span class="fs-4 d-block mb-2">📦</span>
-        No query anomalies detected yet. Execute the performance simulation suite to stream alerts.
-      </div>
+    <div *ngIf="metrics().length === 0" class="card bg-dark text-center p-5 border-secondary border-dashed">
+      <p class="text-secondary">📦 No query anomalies detected yet.</p>
     </div>
 
-    <div *ngFor="let item of metrics" class="card custom-dark-card mb-4 shadow-sm">
-      <div class="card-header bg-transparent border-secondary border-opacity-20 d-flex justify-content-between align-items-center py-3">
+    <div *ngFor="let item of metrics()" class="card bg-dark text-white mb-3 shadow-sm border-secondary">
+      <div class="card-body d-flex align-items-center justify-content-between">
         <div>
-          <span class="fw-bold text-info me-2 fs-5">{{ item.appName }}</span>
-          <small class="text-muted">{{ item.timestamp }}</small>
+          <span class="badge bg-primary me-2">{{ item.appName }}</span>
+          <code class="text-warning">{{ item.query }}</code>
         </div>
-        <span class="badge rounded-pill px-3 py-2" [ngClass]="{'bg-warning text-dark': item.status.includes('Opt'), 'bg-success-subtle text-success border border-success': item.status.includes('PR')}">
-          {{ item.status }}
-        </span>
-      </div>
-
-      <div class="custom-card-body">
-        <div class="p-3 mb-3 rounded terminal-block font-monospace">
-          <small class="text-uppercase card-metric-title d-block mb-1 fw-bold">Intercepted Slow SQL Query</small>
-          <code class="text-warning fs-6">{{ item.query }}</code>
-        </div>
-
-        <div *ngIf="item.proposedFix" class="p-3 mb-2 rounded terminal-block font-monospace">
-          <small class="text-uppercase card-metric-title d-block mb-1 fw-bold">Claude Generated Optimization</small>
-          <code class="text-success fs-6">{{ item.proposedFix }}</code>
-        </div>
-      </div>
-
-      <div class="card-footer bg-transparent border-secondary border-opacity-20 d-flex justify-content-between align-items-center py-3">
-        <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-20 px-2.5 py-1.5 font-monospace">Latency: {{ item.executionTime }}ms</span>
-        <a *ngIf="item.prUrl" [href]="item.prUrl" target="_blank" class="btn btn-outline-info btn-sm px-3">
-          🐙 Review GitHub Migration PR →
-        </a>
+        <span class="badge bg-secondary">{{ item.timestamp }}</span>
       </div>
     </div>
   </section>
-  
 </div>

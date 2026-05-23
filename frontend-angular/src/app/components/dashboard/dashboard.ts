@@ -1,31 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TelemetryService, QueryMetric } from '../../services/telemetry';
+import { Telemetry } from '../../services/telemetry';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './dashboard.html',
-  styleUrl: './dashboard.css'
+  templateUrl: './dashboard.html'
 })
-export class Dashboard implements OnInit {
-  metrics: QueryMetric[] = [];
+export class Dashboard {
+  private telemetry = inject(Telemetry);
+  
+  // Expose the signal
+  metrics = this.telemetry.metrics;
 
-  constructor(private telemetryService: TelemetryService) {}
-
-  ngOnInit(): void {
-    this.telemetryService.getMetrics().subscribe((data) => {
-      this.metrics = data;
-    });
-  }
-
-  // Simple aggregation calculations for our KPI indicators
-  get totalQueriesProcessed(): number {
-    return this.metrics.length;
-  }
-
-  get totalPrsDeployed(): number {
-    return this.metrics.filter(m => m.status.includes('PR')).length;
-  }
+  // Computed signal - Angular tracks this safely
+  totalPrs = computed(() => 
+    this.metrics().filter(m => m.status.includes('PR')).length
+  );
 }

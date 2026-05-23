@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 
 export interface QueryMetric {
@@ -13,38 +12,26 @@ export interface QueryMetric {
   prUrl: string;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
-export class TelemetryService {
+@Injectable({ providedIn: 'root' })
+export class Telemetry {
   private socket: Socket;
-  private metricsList: QueryMetric[] = [];
-  private metricsSubject = new BehaviorSubject<QueryMetric[]>([]);
+  private metricsState = signal<QueryMetric[]>([]);
 
   constructor() {
-    // Connect live to our Node.js WebSocket engine
-    this.socket = io('http://localhost:3000');
+    this.socket = io('http://localhost:3001');
 
-    // Handle initial connection mapping
-    this.socket.on('connect', () => {
-      console.log('Connected directly to backend socket pipeline.');
-    });
-
-    // Capture incoming streaming payloads
     this.socket.on('new-query', (metric: QueryMetric) => {
-      this.metricsList = [metric, ...this.metricsList];
-      this.metricsSubject.next(this.metricsList);
+      this.metricsState.update(list => [metric, ...list]);
     });
 
-    // Capture post-AI optimization state shifts
-    this.socket.on('update-query', (updatedMetric: QueryMetric) => {
-      this.metricsList = this.metricsList.map(m => m.id === updatedMetric.id ? updatedMetric : m);
-      this.metricsSubject.next(this.metricsList);
+    this.socket.on('update-query', (updated: QueryMetric) => {
+      this.metricsState.update(list => 
+        list.map(m => m.id === updated.id ? updated : m)
+      );
     });
   }
 
-  // Expose the data stream to the component controllers cleanly
-  getMetrics(): Observable<QueryMetric[]> {
-    return this.metricsSubject.asObservable();
+  get metrics() {
+    return this.metricsState.asReadonly();
   }
 }
