@@ -1,9 +1,5 @@
 import { Octokit } from '@octokit/rest';
 
-const octokit = new Octokit({
-  auth: process.env.GITHUB_TOKEN
-});
-
 interface CreatePrOptions {
   repoOwner: string;
   repoName: string;
@@ -15,12 +11,23 @@ interface CreatePrOptions {
 export async function createOptimizationPullRequest(options: CreatePrOptions) {
   const { repoOwner, repoName, baseBranch, suggestedSql, explanation } = options;
   
-  if (!process.env.GITHUB_TOKEN || process.env.GITHUB_TOKEN.startsWith('your_')) {
-    console.log('📦 [GitHub Simulation] Skipping real API call. PR payload verified successfully.');
+  // 🔍 Dynamic token loading: Read it precisely when the function is called
+  const cleanToken = process.env.GITHUB_TOKEN?.trim();
+
+  console.log('--- 🐙 Live PR Dispatch Verification ---');
+  console.log('Token Runtime Status:', cleanToken ? 'LOADED ✅' : 'NOT FOUND ❌');
+  console.log('---------------------------------------');
+
+  if (!cleanToken || cleanToken.startsWith('your_')) {
+    console.log('📦 [GitHub Simulation] Skipping real API call. No valid token found.');
     return 'https://github.com/mock-repo/pull/42';
   }
 
-  // Generate a totally unique branch name for this specific database patch
+  // Initialize Octokit dynamically inside the runtime thread
+  const octokit = new Octokit({
+    auth: cleanToken
+  });
+
   const branchName = `optimize/db-index-${Date.now()}`;
   const filePath = 'migrations/add_performance_index.sql';
 

@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { analyzeSlowQuery } from './ai-analyzer.js';
 import { createOptimizationPullRequest } from './github-service.js'; // Imports the GitHub module
 
-dotenv.config();
+dotenv.config({ path: './.env' });
 
 const app = express();
 app.use(express.json());
@@ -55,6 +55,7 @@ app.post('/v1/telemetry', verifyApiKey, async (req: Request, res: Response) => {
       suggestedSql: aiAnalysis.suggestedIndexSql,
       explanation: aiAnalysis.explanation
     });
+    
 
     console.log(`🎉 SUCCESS: Pull Request deployed live!`);
     console.log(`🔗 Link: ${prUrl}`);
